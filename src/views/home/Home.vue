@@ -6,107 +6,8 @@
     <home-recommend-view :recommends="recommends"></home-recommend-view>
     <home-feature-view></home-feature-view>
     <tab-control class="tab-control" :titles="['流行','精选','新款']"></tab-control>
-
-    <ul>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-      <li>列表</li>
-    </ul>
+    <goods-list :goods="goods['pop'].list"></goods-list>
+    
 
   </div>
 </template>
@@ -119,6 +20,7 @@
   // 公共组件
   import NavBar from 'components/common/navbar/NavBar.vue'
   import TabControl from 'components/content/tabControl/TabControl.vue'
+  import GoodsList from 'components/content/goods/GoodsList.vue'
   // 其他
   import { getHomeMultidata,getHomeGoods } from "network/home";
 
@@ -130,6 +32,7 @@ export default {
     HomeFeatureView,
     NavBar,
     TabControl,
+    GoodsList,
 
   },
   data(){
@@ -145,15 +48,28 @@ export default {
   },
   created(){
     //1请求多个数据
-    getHomeMultidata().then(res=>{
+    this.getHomeMultidata()
+    // 2请求商品数据
+    this.getHomeGoods('pop')
+    this.getHomeGoods('new')
+    this.getHomeGoods('sell')
+  },
+  methods:{
+    getHomeMultidata(){
+      getHomeMultidata().then(res=>{
       console.log(res);
       this.banners=res.data.banner.list;
       this.recommends=res.data.recommend.list;
-    })
-    // 2请求商品数据
-    getHomeGoods().then(res=>{
-      console.log(res)
-    })
+      })
+    },
+    getHomeGoods(type){
+      const page=this.goods[type].page+1
+      getHomeGoods(type,page).then(res=>{
+      console.log(res);
+      this.goods[type].list.push(...res.data.list)
+      this.goods[type].page+=1
+      })
+    }
   }
 };
 </script>
@@ -177,5 +93,6 @@ export default {
   .tab-control{
     position: sticky;
     top: 44px;
+    z-index: 99;
   }
 </style>
