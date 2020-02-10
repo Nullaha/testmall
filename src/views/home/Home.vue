@@ -5,8 +5,10 @@
     <home-swiper :banners="banners"></home-swiper>
     <home-recommend-view :recommends="recommends"></home-recommend-view>
     <home-feature-view></home-feature-view>
-    <tab-control class="tab-control" :titles="['流行','精选','新款']"></tab-control>
-    <goods-list :goods="goods['pop'].list"></goods-list>
+    <tab-control class="tab-control" 
+                  :titles="['流行','新款','精选']"
+                  @tabClick="tabClick"></tab-control>
+    <goods-list :goods="showGoods"></goods-list>
     
 
   </div>
@@ -43,7 +45,13 @@ export default {
         'pop':{page:0,list:[]},
         'new':{page:0,list:[]},
         'sell':{page:0,list:[]}
-      }
+      },
+      currentType:'pop',
+    }
+  },
+  computed:{
+    showGoods(){
+      return this.goods[this.currentType].list
     }
   },
   created(){
@@ -55,6 +63,22 @@ export default {
     this.getHomeGoods('sell')
   },
   methods:{
+    // 事件监听相关的方法
+    tabClick(index){
+      // console.log(index);
+      switch(index){
+        case 0:
+          this.currentType='pop';
+          break
+        case 1:
+          this.currentType='new';
+          break
+        case 2:
+          this.currentType='sell';
+          break
+      }
+    },
+    // 网络请求相关的方法
     getHomeMultidata(){
       getHomeMultidata().then(res=>{
       console.log(res);
@@ -69,7 +93,8 @@ export default {
       this.goods[type].list.push(...res.data.list)
       this.goods[type].page+=1
       })
-    }
+    },
+    
   }
 };
 </script>
@@ -87,12 +112,12 @@ export default {
     left: 0;
     right: 0;
     top: 0;
-    z-index: 999;
+    z-index: 9;
   }
 
   .tab-control{
     position: sticky;
     top: 44px;
-    z-index: 99;
+    z-index: 9;
   }
 </style>

@@ -36,7 +36,4 @@ export default {
     padding: 1px;
   }
   
-  /* .good-item{
-    flex: 1;
-  } */
 </style>
