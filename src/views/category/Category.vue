@@ -1,15 +1,129 @@
 <!--  -->
 <template>
-<div>
-分类
-</div>
+
+    <div class="wrapper">
+      <ul class="content">
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+        <li>列表</li>
+      </ul>
+    </div>
+
 </template>
 
 <script>
+import BScroll from 'better-scroll'
+
 export default {
-    name:"Category"
-}
+  name: "Category",
+  mounted(){
+    new BScroll(document.querySelector('.content'))
+  }
+};
 </script>
 
-<style lang='stylus' rel='stylesheet/stylus'>
+<style scoped>
+  .wrapper {
+    height: 150px;
+    background-color: red;
+    /* overflow: hidden;
+    overflow-y: scroll; */
+  }
 </style>
