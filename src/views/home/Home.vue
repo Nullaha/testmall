@@ -2,122 +2,159 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <home-recommend-view :recommends="recommends"></home-recommend-view>
-    <home-feature-view></home-feature-view>
-    <tab-control class="tab-control" 
-                  :titles="['流行','新款','精选']"
-                  @tabClick="tabClick"></tab-control>
-    <goods-list :goods="showGoods"></goods-list>
-    
 
+    <scroll class="content" ref="scroll" 
+            :probe-type="3" @scroll="contentScroll" 
+            :pull-up-load='true' @pullingUp="loadMore">
+      <home-swiper :banners="banners"></home-swiper>
+      <home-recommend-view :recommends="recommends"></home-recommend-view>
+      <home-feature-view></home-feature-view>
+      <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
 <script>
-  // 子组件
-  import HomeSwiper from './childComps/HomeSwiper'
-  import HomeRecommendView from './childComps/HomeRecommendView'
-  import HomeFeatureView from './childComps/HomeFeatureView'
-  // 公共组件
-  import NavBar from 'components/common/navbar/NavBar.vue'
-  import TabControl from 'components/content/tabControl/TabControl.vue'
-  import GoodsList from 'components/content/goods/GoodsList.vue'
-  // 其他
-  import { getHomeMultidata,getHomeGoods } from "network/home";
+// 子组件
+import HomeSwiper from "./childComps/HomeSwiper";
+import HomeRecommendView from "./childComps/HomeRecommendView";
+import HomeFeatureView from "./childComps/HomeFeatureView";
+// 公共组件
+import NavBar from "components/common/navbar/NavBar.vue";
+import TabControl from "components/content/tabControl/TabControl.vue";
+import GoodsList from "components/content/goods/GoodsList.vue";
+import Scroll from "components/common/scroll/Scroll.vue";
+import BackTop from 'components/content/backTop/BackTop.vue'
+// 其他
+import { getHomeMultidata, getHomeGoods } from "network/home";
 
 export default {
   name: "Home",
-  components:{
+  components: {
     HomeSwiper,
     HomeRecommendView,
     HomeFeatureView,
     NavBar,
     TabControl,
     GoodsList,
-
+    Scroll,
+    BackTop,
   },
-  data(){
+  data() {
     return {
-      banners:[],
-      recommends:[],
-      goods:{
-        'pop':{page:0,list:[]},
-        'new':{page:0,list:[]},
-        'sell':{page:0,list:[]}
+      banners: [],
+      recommends: [],
+      goods: {
+        pop: { page: 0, list: [] },
+        new: { page: 0, list: [] },
+        sell: { page: 0, list: [] }
       },
-      currentType:'pop',
+      currentType: "pop",
+      isShowBackTop:false,
+    };
+  },
+  computed: {
+    showGoods() {
+      return this.goods[this.currentType].list;
     }
   },
-  computed:{
-    showGoods(){
-      return this.goods[this.currentType].list
-    }
-  },
-  created(){
+  created() {
     //1请求多个数据
-    this.getHomeMultidata()
+    this.getHomeMultidata();
     // 2请求商品数据
-    this.getHomeGoods('pop')
-    this.getHomeGoods('new')
-    this.getHomeGoods('sell')
+    this.getHomeGoods("pop");
+    this.getHomeGoods("new");
+    this.getHomeGoods("sell");
   },
-  methods:{
+  methods: {
     // 事件监听相关的方法
-    tabClick(index){
+    tabClick(index) {
       // console.log(index);
-      switch(index){
+      switch (index) {
         case 0:
-          this.currentType='pop';
-          break
+          this.currentType = "pop";
+          break;
         case 1:
-          this.currentType='new';
-          break
+          this.currentType = "new";
+          break;
         case 2:
-          this.currentType='sell';
-          break
+          this.currentType = "sell";
+          break;
       }
     },
+    backClick(){
+      // console.log('点击了组件');
+      this.$refs.scroll.scrollTo(0,0,500)
+    },
+    contentScroll(position){
+      this.isShowBackTop=(-position.y)>1000;
+    },
+    loadMore(){
+      console.log('-----')
+      this.getHomeGoods(this.currentType);//获取数据
+      this.$refs.scroll.scroll.refresh();//进行一次刷新
+    },
     // 网络请求相关的方法
-    getHomeMultidata(){
-      getHomeMultidata().then(res=>{
-      console.log(res);
-      this.banners=res.data.banner.list;
-      this.recommends=res.data.recommend.list;
-      })
+    getHomeMultidata() {
+      getHomeMultidata().then(res => {
+        console.log(res);
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
     },
-    getHomeGoods(type){
-      const page=this.goods[type].page+1
-      getHomeGoods(type,page).then(res=>{
-      console.log(res);
-      this.goods[type].list.push(...res.data.list)
-      this.goods[type].page+=1
-      })
-    },
-    
+    getHomeGoods(type) {
+      const page = this.goods[type].page + 1;
+      getHomeGoods(type, page).then(res => {
+        console.log(res);
+        this.goods[type].list.push(...res.data.list);
+        this.goods[type].page += 1;
+        this.$refs.scroll.finishPullUp() //加载完成
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
-  #home{
-    padding-top: 44px;
-  }
+#home {
+  padding-top: 44px;
+  height: 100vh;
+  position: relative;
+}
 
-  .home-nav{
-    background-color: var(--color-tint);
-    color: #fff;
+.home-nav {
+  background-color: var(--color-tint);
+  color: #fff;
 
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
-  }
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 9;
+}
 
-  .tab-control{
-    position: sticky;
-    top: 44px;
-    z-index: 9;
-  }
+.tab-control {
+  position: sticky;
+  top: 44px;
+  z-index: 9;
+}
+
+.content{
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+
+}
+/* 
+.content{
+  height: calc(100% - 93px);
+  overflow: hidden;
+  margin-top: 44px;
+
+} */
 </style>

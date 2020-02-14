@@ -1,8 +1,8 @@
 <!--  -->
 <template>
 
-    <div class="wrapper">
-      <ul class="content">
+    <div class="content">
+      <ul>
         <li>列表</li>
         <li>列表</li>
         <li>列表</li>
@@ -113,17 +113,31 @@ import BScroll from 'better-scroll'
 
 export default {
   name: "Category",
+  data(){
+    return {
+      scroll:null
+    }
+  },
   mounted(){
-    new BScroll(document.querySelector('.content'))
+    this.scroll = new BScroll(document.querySelector('.content'),{
+      probeType:3,
+      pullUpLoad:true,
+    })
+    // this.scroll.on('scroll',(position)=>{
+    //   console.log(position)
+    // })
+    this.scroll.on('pullingUp',()=>{
+      console.log('------')
+    })
   }
 };
 </script>
 
 <style scoped>
-  .wrapper {
+  .content {
     height: 150px;
     background-color: red;
-    /* overflow: hidden;
-    overflow-y: scroll; */
+    overflow: hidden;
+    /* overflow-y: scroll; */
   }
 </style>
