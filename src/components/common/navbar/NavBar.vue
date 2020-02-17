@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div class="nav-bar">
+  <div id="nav-bar">
     <div class="left"><slot name="left"></slot></div>
     <div class="center"><slot name="center"></slot></div>
     <div class="right"><slot name="right"></slot></div>
@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style scoped>
-  .nav-bar{
+  #nav-bar{
     display: flex;
     height: 44px;
     line-height: 44px;
