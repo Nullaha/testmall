@@ -1,0 +1,109 @@
+<!--  -->
+<template>
+<div class="wrapper" ref="wrapper">
+  <div class="content">
+    <slot></slot>
+  </div>
+</div>
+</template>
+
+<script>
+import BScroll from 'better-scroll'
+export default {
+  name:'Scroll',
+  data(){
+    return {
+      scroll:null
+    }
+  },
+  mounted(){
+    this.scroll=new BScroll(this.$refs.wrapper,{
+
+    })
+  }
+}
+</script>
+
+<style lang='stylus' rel='stylesheet/stylus'>
+</style>
+
+
+// router-index.js
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter)
+const routes=[
+  {
+    path:'/home'
+    component:Home,
+  }
+]
+const router=new VueRouter({
+  routes,
+  mode:'history'
+})
+
+
+
+//创建组件NavBar
+<template>
+  <div id="nav-bar">
+    <div class="left"><slot name="left"></slot></div>
+
+  </div>
+</template>
+
+<script>
+  
+  export default {
+  name: "NavBar",
+
+}
+</script>
+
+<style>
+  
+</style>
+
+import axios from 'axios'
+//封装成一个函数
+export function request(config){
+  //实例
+  const instance=axios.create({
+    baseURL:'http://123.444.55.4',
+    timeout:3000
+  })
+  //拦截
+  instance.interceptors.request.use(res=>{
+    return config
+  },err=>{
+
+  })
+  instance.interceptors.response.use()
+  //发送请求
+  return instance(config)
+}
+
+
+//轮播图组件swiper
+props:{
+  banners:{
+    type:Array,
+    default(){
+      return []
+    }
+  }
+}
+congst bscroll=new BScroll(document.querySelector('.content'),{
+  probeType:1 or 2 or 3,
+  click:true,
+  pullUpLoad:true,
+})
+bscroll.on('scroll',(position)=>{
+  console.log(position)
+})
+bscroll.on('pullingUp',()=>{
+  console.log('上拉请求更多')
+  bscroll.finishPullUp()
+})
